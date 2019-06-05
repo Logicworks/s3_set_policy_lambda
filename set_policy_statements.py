@@ -207,12 +207,9 @@ def lambda_handler(event, context):
                 set_s3_bucket_policy(bucket_name, s3PolicyDoc, current_account_id)
             elif policyType == 'kms':
 
-                key_alias = 'aws/' + policyName
 
-                key_alias_arn = 'arn:aws:kms:us-east-1:' + current_account_id +':alias/' + policyName
-
-                print('Key ALias Name [aws/secretsmanager] - {0}'.format(key_alias))
-                print('Key ALias ARN                       - {0}'.format(key_alias_arn))
+                key_arn = policyInfo['keyarn']
+                print('Key ALias ARN  - {0}'.format(key_arn))
 
                 kms_client = boto3.client('kms')
 
@@ -221,7 +218,7 @@ def lambda_handler(event, context):
                 print("The Key Response {0}".format(list_key_response))
 
                 kmsresponse = kms_client.describe_key(
-                    KeyId=key_alias_arn
+                    KeyId=key_arn
                 )
 
                 print('Describe Key Response'.format(kmsresponse))

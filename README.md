@@ -23,8 +23,9 @@ Uses
 ```json
 {
    "policyNames": [ 
-       { "type" : "kms",
-         "name" :"secretsmanager"
+       { "type"    : "kms",
+         "name"    :"secretsmanager",
+         "keyarn"  : "arn:aws:kms:us-east-1:278833423079:key/1a5fda48-6bda-4a56-9c60-22ccb0fb8348"
        },
        { "type" : "s3",
          "name" : "ss-cf-templates" 
