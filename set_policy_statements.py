@@ -214,7 +214,7 @@ def lambda_handler(event, context):
                 kms_client = boto3.client('kms')
 
                 kmsresponse = kms_client.describe_key(
-                    KeyId=key_alias
+                    KeyId=policyName
                 )
 
                 print('Describe Key Response'.format(kmsresponse))
