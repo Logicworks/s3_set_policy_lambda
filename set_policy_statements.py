@@ -213,10 +213,6 @@ def lambda_handler(event, context):
 
                 kms_client = boto3.client('kms')
 
-                list_key_response = kms_client.list_keys()
-
-                print("The Key Response {0}".format(list_key_response))
-
                 kmsresponse = kms_client.describe_key(
                     KeyId=key_arn
                 )
@@ -226,7 +222,7 @@ def lambda_handler(event, context):
                 kms_id = kmsresponse['KeyMetadata']['KeyId']
                 print('KMS ID ==> {0}'.format(kms_id))
 
-                KMSPolicyDoc = policy_document_from_jinja(accountIds, current_account_id, policyName, kms_id)
+                KMSPolicyDoc = policy_document_from_jinja(accountIds, current_account_id, policyName, key_arn)
                 set_kms_policy(kms_id, policyName, KMSPolicyDoc)
 
 
