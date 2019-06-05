@@ -34,15 +34,15 @@ jobs:
       - run:
           name: install sam cli
           command: |
-            pip install aws-sam-cli
+            pip install --user aws-sam-cli
       - run:
           name: Issue Sam Build
           command: |
-            sam build
+            ~/sam build
       - run:
           name: Sam Package
           command: |
-             sam package --output-template-file packaged.yaml --s3-bucket 27883342307-us-east-1-code
+             ~/sam package --output-template-file packaged.yaml --s3-bucket 27883342307-us-east-1-code
       - run:
           name: Sam Deploy
           command: |
