@@ -182,12 +182,10 @@ def lambda_handler(event, context):
         accountIds = get_account_ids(jsonMessage)
 
         for policyInfo in jsonMessage['policyNames']:
-            print('Bucket Name {0}'.format(policyInfo))
+            print('Policy Info {0}'.format(policyInfo))
 
             policyType = policyInfo['type']
             policyName = policyInfo['name']
-
-
 
             if policyType == 'secrets':
 
@@ -207,23 +205,10 @@ def lambda_handler(event, context):
                 set_s3_bucket_policy(bucket_name, s3PolicyDoc, current_account_id)
             elif policyType == 'kms':
 
-
                 key_arn = policyInfo['keyarn']
-                print('Key ALias ARN  - {0}'.format(key_arn))
-
-                kms_client = boto3.client('kms')
-
-                kmsresponse = kms_client.describe_key(
-                    KeyId=key_arn
-                )
-
-                print('Describe Key Response'.format(kmsresponse))
-
-                kms_id = kmsresponse['KeyMetadata']['KeyId']
-                print('KMS ID ==> {0}'.format(kms_id))
 
                 KMSPolicyDoc = policy_document_from_jinja(accountIds, current_account_id, policyName, key_arn)
-                set_kms_policy(kms_id, policyName, KMSPolicyDoc)
+                set_kms_policy(key_arn, policyName, KMSPolicyDoc)
 
 
 
