@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Resources:
+  CodeBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${AWS::AccountId}-${AWS::Region}-code'
+      AccessControl: Private
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - NoncurrentVersionExpirationInDays: 7
+            Status: Enabled
+  SetPolicyStatements:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: set_policy_statements.lambda_handler
+      FunctionName: set_policy_statements
+      Runtime: python3.6
+      CodeUri:
+         Bucket: !Ref CodeBucket
+         Key: set-policy-statement.zip
+      Events:
+        MyTopic:
+          Type: SNS
+          Properties:
+            Topic: 'arn:aws:sns:us-east-1:315375983207:account_lists'
+      Policies:
+        - AWSLambdaExecute # Managed Policy
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:PutResourcePolicy
+                - secretsmanager:PutSecretValue
+                - secretsmanager:RotateSecret
+                - secretsmanager:UpdateSecret
+                - secretsmanager:DescribeSecret
+              Resource: 'arn:aws:secretsmanager:*:*:secret:*'
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:PutBucketPublicAccessBlock
+                - s3:PutBucketAcl
+                - s3:PutBucketPolicy
+                - s3:DeleteBucketPolicy
+              Resource: 'arn:aws:s3:::*'
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:ObjectOwnerOverrideToBucketOwner
+                - s3:PutObjectVersionAcl
+                - s3:PutObjectAcl
+              Resource: 'arn:aws:s3:::*/*'
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - iam:GenerateCredentialReport
+                - iam:GenerateServiceLastAccessedDetails
+                - iam:Get*
+                - iam:List*
+                - iam:SimulateCustomPolicy
+                - iam:SimulatePrincipalPolicy
+              Resource: '*'

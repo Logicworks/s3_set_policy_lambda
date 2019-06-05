@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  CodeBucket:
+    Properties:
+      AccessControl: Private
+      BucketName:
+        Fn::Sub: ${AWS::AccountId}-${AWS::Region}-code
+      LifecycleConfiguration:
+        Rules:
+        - NoncurrentVersionExpirationInDays: 7
+          Status: Enabled
+      VersioningConfiguration:
+        Status: Enabled
+    Type: AWS::S3::Bucket
+  SetPolicyStatements:
+    Properties:
+      CodeUri: SetPolicyStatements
+      Events:
+        MyTopic:
+          Properties:
+            Topic: arn:aws:sns:us-east-1:315375983207:account_lists
+          Type: SNS
+      FunctionName: set_policy_statements
+      Handler: set_policy_statements.lambda_handler
+      Policies:
+      - AWSLambdaExecute
+      - Statement:
+        - Action:
+          - secretsmanager:PutResourcePolicy
+          - secretsmanager:PutSecretValue
+          - secretsmanager:RotateSecret
+          - secretsmanager:UpdateSecret
+          - secretsmanager:DescribeSecret
+          Effect: Allow
+          Resource: arn:aws:secretsmanager:*:*:secret:*
+        Version: '2012-10-17'
+      - Statement:
+        - Action:
+          - s3:PutBucketPublicAccessBlock
+          - s3:PutBucketAcl
+          - s3:PutBucketPolicy
+          - s3:DeleteBucketPolicy
+          Effect: Allow
+          Resource: arn:aws:s3:::*
+        Version: '2012-10-17'
+      - Statement:
+        - Action:
+          - s3:ObjectOwnerOverrideToBucketOwner
+          - s3:PutObjectVersionAcl
+          - s3:PutObjectAcl
+          Effect: Allow
+          Resource: arn:aws:s3:::*/*
+        Version: '2012-10-17'
+      - Statement:
+        - Action:
+          - iam:GenerateCredentialReport
+          - iam:GenerateServiceLastAccessedDetails
+          - iam:Get*
+          - iam:List*
+          - iam:SimulateCustomPolicy
+          - iam:SimulatePrincipalPolicy
+          Effect: Allow
+          Resource: '*'
+        Version: '2012-10-17'
+      Runtime: python3.6
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31

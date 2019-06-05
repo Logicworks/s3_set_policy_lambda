@@ -1,0 +1,79 @@
+{
+    "Version": "2012-10-17",
+    "Id": "Policy1557155993484",
+    "Statement": [
+        {
+            "Sid": "Stmt1557155961788",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [{% for accountId in account_ids %}
+                       {% if loop.last %} "arn:aws:iam::{{ accountId }}:root","arn:aws:iam::131913828673:root" {% else %} "arn:aws:iam::{{ accountId }}:root",{% endif %}{% endfor %}
+                ]
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": "arn:aws:s3:::{{ bucket_name }}/*"
+
+        },
+        {
+            "Sid": "Stmt1557155991780",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [{% for accountId in account_ids %}
+                       {% if loop.last %} "arn:aws:iam::{{ accountId }}:root","arn:aws:iam::131913828673:root" {% else %} "arn:aws:iam::{{ accountId }}:root",{% endif %}{% endfor %}
+                ]
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::{{ bucket_name }}"
+
+        },
+        {
+            "Sid": "Stmt1557155961788",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [{% for accountId in account_ids %} {% if loop.last %}
+                        "arn:aws:iam::{{ accountId }}:role/ChewyCircleCIRole",
+                        "arn:aws:iam::{{ accountId }}:role/ChewyTerraformAutomationRole",
+                        "arn:aws:iam::131913828673:role/ChewyCircleCIRole",
+                        "arn:aws:iam::131913828673:role/ChewyTerraformAutomationRole"{% else %}
+                        "arn:aws:iam::{{ accountId }}:role/ChewyCircleCIRole",
+                        "arn:aws:iam::{{ accountId }}:role/ChewyTerraformAutomationRole",{% endif %} {% endfor %}
+                ]
+            },
+            "Action": [
+                "s3:ListBucket",
+                "s3:ListBucketByTags",
+                "s3:PutBucketPolicy",
+                "s3:PutBucketNotification",
+                "s3:PutBucketTagging",
+                "s3:PutBucketVersioning"
+            ],
+            "Resource": "arn:aws:s3:::{{ bucket_name }}"
+        },
+        {
+            "Sid": "Stmt1557155991780",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [{% for accountId in account_ids %} {% if loop.last %}
+                        "arn:aws:iam::{{ accountId }}:role/ChewyCircleCIRole",
+                        "arn:aws:iam::{{ accountId }}:role/ChewyTerraformAutomationRole",
+                        "arn:aws:iam::131913828673:role/ChewyCircleCIRole",
+                        "arn:aws:iam::131913828673:role/ChewyTerraformAutomationRole" {% else %}
+                        "arn:aws:iam::{{ accountId }}:role/ChewyCircleCIRole",
+                        "arn:aws:iam::{{ accountId }}:role/ChewyTerraformAutomationRole",{% endif %} {% endfor %}
+                ]
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:PutObject",
+                "s3:PutObjectTagging"
+
+            ],
+            "Resource": "arn:aws:s3:::{{ bucket_name }}/*"
+
+        }
+    ]
+}

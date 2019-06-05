@@ -1,0 +1,49 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@0.1.13
+  aws-assume-role: holdaraffle/aws-assume-role@0.0.10
+
+jobs:
+  set-aws-creds:
+    executor: aws-cli/default
+    steps:
+      - aws-cli/install
+      - aws-assume-role/assume_role:
+          access_key_id: AWS_SCRT_KEY
+          secret_access_key: AWS_SRCT_ACCESS_KEY
+          account: ${AWS_SS_ACCOUNT_ID}
+          role: ${AWS_TERRAFORM_ROLE}
+      - run:
+          name: "Show AWS Creds file"
+          command: |
+               cat ~/.aws/credentials
+      - save_cache:
+          key: policy-cache-v1-{{ .Revision }}
+          paths:
+            - ~/.aws
+  build-lambda-function:
+    docker:
+      image: circleci/python:3.6.8
+    steps:
+      - checkout
+      - aws-cli/install
+      - restore_cache:
+          keys:
+            - policy-cache-v1-{{ .Revision }}
+      - run:
+          name: install sam cli
+          command: |
+            pip install --user aws-sam-cli
+      - run:
+          name: Issue Sam Build
+          command: |
+            sam build
+      - run:
+          name: Sam Package
+          command: |
+             sam package --output-template-file packaged.yaml --s3-bucket 27883342307-us-east-1-code
+      - run:
+          name: Sam Deploy
+          command: |
+            aws cloudformation deploy --template-file /Users/danohalloran/git/clients/chewy/tools/s3_set_policy_lambda/packaged.yaml --stack-name setpolicylambda --capabilities CAPABILITY_IAM

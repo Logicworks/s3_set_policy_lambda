@@ -1,0 +1,18 @@
+{
+    "Version": "2012-10-17",
+    "Id": "Policy1557155993484",
+    "Statement": [
+        {
+            "Sid": "Stmt1557155961788",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                       "arn:aws:iam::131913828673:root",
+                       {% for accountId in account_ids %}
+                       {% if loop.last %} "arn:aws:iam::{{ accountId }}:root" {% else %} "arn:aws:iam::{{ accountId }}:root",{% endif %}{% endfor %}
+                ]
+            },
+            "Action": [
+                "secretsmanager:*"
+            ],
+            "Resource": "{{ secretArn }}"
