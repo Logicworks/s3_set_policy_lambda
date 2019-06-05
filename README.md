@@ -16,6 +16,7 @@ Uses
   * policyNames
     * type: The type of policies. Vaild types are s3, secrets, kms
     * name: The name of the policy it must match the name of the jinja2 template file in the templates directory. 
+    * keyarn: This is the KMS Key arn to have the policy updated.
   * accountids
     * The list of account ids you want to have allowed access to these policy statements.
 
