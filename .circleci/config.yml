@@ -38,11 +38,11 @@ jobs:
       - run:
           name: Issue Sam Build
           command: |
-            ~/sam build
+            ~/.local/bin/sam build
       - run:
           name: Sam Package
           command: |
-             ~/sam package --output-template-file packaged.yaml --s3-bucket 27883342307-us-east-1-code
+             ~/.local/bin/sam package --output-template-file packaged.yaml --s3-bucket 27883342307-us-east-1-code
       - run:
           name: Sam Deploy
           command: |
