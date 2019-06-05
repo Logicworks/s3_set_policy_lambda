@@ -47,3 +47,9 @@ jobs:
           name: Sam Deploy
           command: |
             aws cloudformation deploy --template-file /Users/danohalloran/git/clients/chewy/tools/s3_set_policy_lambda/packaged.yaml --stack-name setpolicylambda --capabilities CAPABILITY_IAM
+workflows:
+  version: 2.1
+  build-deploy:
+    jobs:
+      - set-aws-creds
+      - build-lambda-function
