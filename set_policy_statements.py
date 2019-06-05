@@ -209,7 +209,7 @@ def lambda_handler(event, context):
 
                 key_alias = 'aws/' + policyName
 
-                print('Key ALias Name'.format(key_alias))
+                print('Key ALias Name {0}'.format(key_alias))
 
                 kms_client = boto3.client('kms')
 
