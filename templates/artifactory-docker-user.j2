@@ -12,9 +12,8 @@
                        {% if loop.last %} "arn:aws:iam::{{ accountId }}:root" {% else %} "arn:aws:iam::{{ accountId }}:root",{% endif %}{% endfor %}
                 ]
             },
-            "Action": [
-                "secretsmanager:*"
-            ],
+            "Action":  "secretsmanager:*",
             "Resource": "{{ secretArn }}"
+        }
     ]
 }
