@@ -216,6 +216,10 @@ def lambda_handler(event, context):
 
                 kms_client = boto3.client('kms')
 
+                list_key_response = kms_client.list_keys()
+
+                print("The Key Response {0}".format(list_key_response))
+
                 kmsresponse = kms_client.describe_key(
                     KeyId=key_alias_arn
                 )

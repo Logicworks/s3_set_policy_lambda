@@ -23,6 +23,9 @@ Uses
 ```json
 {
    "policyNames": [ 
+       { "type" : "kms",
+         "name" :"secretsmanager"
+       },
        { "type" : "s3",
          "name" : "ss-cf-templates" 
        },
@@ -37,9 +40,6 @@ Uses
        { "type" : "secrets",
          "name" :"artifactory-docker-user"
        
-       },
-       { "type" : "kms",
-         "name" :"secretsmanager"
        }
    ],
    "accountids": [
