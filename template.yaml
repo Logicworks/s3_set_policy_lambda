@@ -18,6 +18,7 @@ Resources:
       Handler: set_policy_statements.lambda_handler
       FunctionName: set_policy_statements
       Runtime: python3.6
+      Timeout: 360
       CodeUri:
          Bucket: !Ref CodeBucket
          Key: set-policy-statement.zip
