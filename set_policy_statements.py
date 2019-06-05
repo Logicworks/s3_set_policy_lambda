@@ -209,6 +209,8 @@ def lambda_handler(event, context):
 
                 key_alias = 'aws/' + policyName
 
+                print('Key ALias Name'.format(key_alias))
+
                 kms_client = boto3.client('kms')
 
                 kmsresponse = kms_client.describe_key(
@@ -227,10 +229,10 @@ def lambda_handler(event, context):
 
     except Exception as e:
         logger.error("ERROR: ")
-        logger.error("-- set_s3_bucket_policy -- ERROR: {0}".format(str(e)))
+        logger.error("-- lambda_handler -- ERROR: {0}".format(str(e)))
         raise
     finally:
-        logger.info("-- set_s3_bucket_policy -- Finished")
+        logger.info("-- lambda_handler -- Finished")
 
 
 def main():

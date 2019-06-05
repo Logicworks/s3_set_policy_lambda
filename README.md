@@ -39,7 +39,7 @@ Uses
        
        },
        { "type" : "kms",
-         "name" :"aws-shared-services"
+         "name" :"secretsmanager"
        }
    ],
    "accountids": [
