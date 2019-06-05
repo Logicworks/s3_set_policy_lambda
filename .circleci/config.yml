@@ -17,6 +17,7 @@ jobs:
       - run:
           name: "Show AWS Creds file"
           command: |
+               aws configure set region us-east-1 --profile default
                cat ~/.aws/credentials
       - save_cache:
           key: policy-cache-v1-{{ .Revision }}
