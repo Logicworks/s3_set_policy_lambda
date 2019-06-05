@@ -24,7 +24,7 @@ jobs:
             - ~/.aws
   build-lambda-function:
     docker:
-      image: circleci/python:3.6.8
+      - image: circleci/python:3.6.8
     steps:
       - checkout
       - aws-cli/install
