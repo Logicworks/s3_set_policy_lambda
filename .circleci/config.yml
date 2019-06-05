@@ -52,4 +52,6 @@ workflows:
   build-deploy:
     jobs:
       - set-aws-creds
-      - build-lambda-function
+      - build-lambda-function:
+          requires:
+            - set-aws-creds
