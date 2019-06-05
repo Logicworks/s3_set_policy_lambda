@@ -146,6 +146,27 @@ def set_s3_bucket_policy(bucket_name, s3PolicyDoc, ss_account_id):
         logger.info("-- set_s3_bucket_policy -- Finished")
 
 
+def set_kms_policy(kms_id,policyName,KMSPolicyDoc):
+
+
+    try:
+        kms_client = boto3.resource('kms')
+
+        response = kms_client.put_key_policy(
+            KeyId=kms_id,
+            PolicyName=policyName,
+            Policy=KMSPolicyDoc
+        )
+        print("The Return from put key policy {0}".format(json.dumps(response,indent=4)))
+
+    except Exception as e:
+        logger.error("ERROR: ")
+        logger.error("-- set_kms_policy -- ERROR: {0}".format(str(e)))
+        raise
+    finally:
+        logger.info("-- set_kms_policy -- Finished")
+
+
 def lambda_handler(event, context):
     try:
 
@@ -160,24 +181,49 @@ def lambda_handler(event, context):
 
         accountIds = get_account_ids(jsonMessage)
 
-        for bucketName in jsonMessage['s3bucketname']:
-            print('Bucket Name {0}'.format(bucketName))
-            bucket_name = current_account_id + "-" + bucketName
+        for policyInfo in jsonMessage['policyNames']:
+            print('Bucket Name {0}'.format(policyInfo))
 
-            if bucketName == 'artifactory-docker-user':
+            policyType = policyInfo['type']
+            policyName = policyInfo['name']
+
+
+
+            if policyType == 'secrets':
 
                 client = boto3.client('secretsmanager')
 
                 response = client.describe_secret(
-                    SecretId=bucketName
+                    SecretId=policyName
+                )
+                policy_name = current_account_id + "-" + policyName
+                secretArn = response['ARN']
+                s3PolicyDoc = policy_document_from_jinja(accountIds, current_account_id, policyName, secretArn)
+                set_secrets_policy(policy_name, s3PolicyDoc, secretArn)
+
+            elif  policyType == 's3':
+                bucket_name = current_account_id + "-" + policyName
+                s3PolicyDoc = policy_document_from_jinja(accountIds, current_account_id, policyName, "false")
+                set_s3_bucket_policy(bucket_name, s3PolicyDoc, current_account_id)
+            elif policyType == 'kms':
+
+                key_alias = 'aws/' + policyName
+
+                kms_client = boto3.client('kims')
+
+                kmsresponse = kms_client.describe_key(
+                    KeyId=key_alias
                 )
 
-                secretArn = response['ARN']
-                s3PolicyDoc = policy_document_from_jinja(accountIds, current_account_id, bucketName, secretArn)
-                set_secrets_policy(bucket_name, s3PolicyDoc, secretArn)
-            else:
-                s3PolicyDoc = policy_document_from_jinja(accountIds, current_account_id, bucketName, "false")
-                set_s3_bucket_policy(bucket_name, s3PolicyDoc, current_account_id)
+                print('Describe Key Response'.format(kmsresponse))
+
+                kms_id = kmsresponse['KeyMetadata']['KeyId']
+                print('KMS ID ==> {0}'.format(kms_id))
+
+                KMSPolicyDoc = policy_document_from_jinja(accountIds, current_account_id, policyName, kms_id)
+                set_kms_policy(kms_id, policyName, KMSPolicyDoc)
+
+
 
     except Exception as e:
         logger.error("ERROR: ")
