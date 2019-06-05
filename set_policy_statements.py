@@ -209,12 +209,15 @@ def lambda_handler(event, context):
 
                 key_alias = 'aws/' + policyName
 
-                print('Key ALias Name {0}'.format(key_alias))
+                key_alias_arn = 'arn:aws:kms:us-east-1:' + current_account_id +':alias/' + policyName
+
+                print('Key ALias Name [aws/secretsmanager] - {0}'.format(key_alias))
+                print('Key ALias ARN                       - {0}'.format(key_alias_arn))
 
                 kms_client = boto3.client('kms')
 
                 kmsresponse = kms_client.describe_key(
-                    KeyId=policyName
+                    KeyId=key_alias_arn
                 )
 
                 print('Describe Key Response'.format(kmsresponse))
