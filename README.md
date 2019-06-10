@@ -11,13 +11,13 @@ Uses
 
 ## Diagram on how it works.
 
-<object data="https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatements.pdf" type="application/pdf" width="700px" height="700px">
-    <embed src="https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatements.pdf">
-        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatements.pdf">Download PDF</a>.</p>
+<object data="https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatemets.pdf" type="application/pdf" width="700px" height="700px">
+    <embed src="https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatemets.pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatemets.pdf">Download PDF</a>.</p>
     </embed>
 </object>
-<embed src="https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatements.pdf" width="600" height="500" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
 
+<embed src="https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatemets.pdf"   height="700px" width="500">
 
 
 ## SNS Topic
