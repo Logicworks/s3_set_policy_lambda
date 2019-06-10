@@ -11,7 +11,13 @@ Uses
 
 ## Diagram on how it works.
 
-[embed]https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatements.pdf[/embed]
+<object data="https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatements.pdf" type="application/pdf" width="700px" height="700px">
+    <embed src="https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatements.pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatements.pdf">Download PDF</a>.</p>
+    </embed>
+</object>
+
+
 
 ## SNS Topic
 
