@@ -16,6 +16,7 @@ Uses
         <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatements.pdf">Download PDF</a>.</p>
     </embed>
 </object>
+<embed src="https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatements.pdf" width="600" height="500" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
 
 
 
