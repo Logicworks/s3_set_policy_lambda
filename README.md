@@ -9,6 +9,9 @@ Uses
 * [AWS SAM](https://aws.amazon.com/serverless/sam/) to build, package and deploy the lambda function.
 * [Jinja2](http://jinja.pocoo.org/) to build the policy statments.
 
+## Diagram on how it works.
+
+[embed]https://github.com/Chewy-Inc/set_policies_lambda/blob/master/SetPolicyStatements.pdf[/embed]
 
 ## SNS Topic
 
