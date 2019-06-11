@@ -1,3 +1,9 @@
+#Make sure you set the following environment variables
+# code-bucket          ==> What is the s3 bucket you want to store the 3 bucket in
+# AWS_SCRT_KEY         ==> Your aws Secret Key ID
+# AWS_SRCT_ACCESS_KEY  ==> Your aws secret key
+# AWS_TERRAFORM_ROLE   ==> What role do you want to assume.
+
 version: 2.1
 
 orbs:
@@ -43,7 +49,7 @@ jobs:
       - run:
           name: Sam Package
           command: |
-             ~/.local/bin/sam package --output-template-file packaged.yaml --s3-bucket 27883342307-us-east-1-code
+             ~/.local/bin/sam package --output-template-file packaged.yaml --s3-bucket ${code_bucket}
       - run:
           name: Sam Deploy
           command: |

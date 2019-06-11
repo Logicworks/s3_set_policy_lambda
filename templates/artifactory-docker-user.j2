@@ -7,7 +7,6 @@
             "Effect": "Allow",
             "Principal": {
                 "AWS": [
-                       "arn:aws:iam::131913828673:root",
                        {% for accountId in account_ids %}
                        {% if loop.last %} "arn:aws:iam::{{ accountId }}:root" {% else %} "arn:aws:iam::{{ accountId }}:root",{% endif %}{% endfor %}
                 ]

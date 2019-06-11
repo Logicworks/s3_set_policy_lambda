@@ -1,5 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
+Parameters:
+  SNSTopic:
+    Type: String
+    Description: What is the SNS topic ARN that you would like to associate with this lambda function.
+
 Resources:
   CodeBucket:
     Type: AWS::S3::Bucket
@@ -26,7 +31,7 @@ Resources:
         MyTopic:
           Type: SNS
           Properties:
-            Topic: 'arn:aws:sns:us-east-1:315375983207:account_lists'
+            Topic: !Ref SNSTopic
       Policies:
         - AWSLambdaExecute # Managed Policy
         - Version: '2012-10-17' # Policy Document

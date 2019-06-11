@@ -221,8 +221,8 @@ def lambda_handler(event, context):
 
 
 def main():
-    bucket_name = "278833423079-ss-cf-templates"
-    ss_account_id = "278833423079"
+    bucket_name = "111111111111-ss-cf-templates"
+    ss_account_id = "111111111111"
     accountIds = get_account_ids()
     s3PolicyDoc = policy_document_from_jinja(accountIds)
     set_s3_bucket_policy(bucket_name, s3PolicyDoc, ss_account_id)

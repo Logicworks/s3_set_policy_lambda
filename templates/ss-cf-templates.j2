@@ -7,7 +7,7 @@
             "Effect": "Allow",
             "Principal": {
                 "AWS": [{% for accountId in account_ids %}
-                       {% if loop.last %} "arn:aws:iam::{{ accountId }}:root","arn:aws:iam::131913828673:root" {% else %} "arn:aws:iam::{{ accountId }}:root",{% endif %}{% endfor %}
+                       {% if loop.last %} "arn:aws:iam::{{ accountId }}:root" {% else %} "arn:aws:iam::{{ accountId }}:root",{% endif %}{% endfor %}
                 ]
             },
             "Action": [
@@ -22,7 +22,7 @@
             "Effect": "Allow",
             "Principal": {
                 "AWS": [{% for accountId in account_ids %}
-                       {% if loop.last %} "arn:aws:iam::{{ accountId }}:root","arn:aws:iam::131913828673:root" {% else %} "arn:aws:iam::{{ accountId }}:root",{% endif %}{% endfor %}
+                       {% if loop.last %} "arn:aws:iam::{{ accountId }}:root" {% else %} "arn:aws:iam::{{ accountId }}:root",{% endif %}{% endfor %}
                 ]
             },
             "Action": "s3:ListBucket",
@@ -34,12 +34,10 @@
             "Effect": "Allow",
             "Principal": {
                 "AWS": [{% for accountId in account_ids %} {% if loop.last %}
+                        "arn:aws:iam::{{ accountId }}:role/PowerUserRole",
+                        "arn:aws:iam::{{ accountId }}:role/AdministratorRole" {% else %}
                         "arn:aws:iam::{{ accountId }}:role/ChewyCircleCIRole",
-                        "arn:aws:iam::{{ accountId }}:role/ChewyTerraformAutomationRole",
-                        "arn:aws:iam::131913828673:role/ChewyCircleCIRole",
-                        "arn:aws:iam::131913828673:role/ChewyTerraformAutomationRole" {% else %}
-                        "arn:aws:iam::{{ accountId }}:role/ChewyCircleCIRole",
-                        "arn:aws:iam::{{ accountId }}:role/ChewyTerraformAutomationRole",{% endif %} {% endfor %}
+                        "arn:aws:iam::{{ accountId }}:role/AdministratorRole",{% endif %} {% endfor %}
                 ]
             },
             "Action": [
@@ -57,12 +55,10 @@
             "Effect": "Allow",
             "Principal": {
                 "AWS": [{% for accountId in account_ids %} {% if loop.last %}
-                        "arn:aws:iam::{{ accountId }}:role/ChewyCircleCIRole",
-                        "arn:aws:iam::{{ accountId }}:role/ChewyTerraformAutomationRole",
-                        "arn:aws:iam::131913828673:role/ChewyCircleCIRole",
-                        "arn:aws:iam::131913828673:role/ChewyTerraformAutomationRole" {% else %}
-                        "arn:aws:iam::{{ accountId }}:role/ChewyCircleCIRole",
-                        "arn:aws:iam::{{ accountId }}:role/ChewyTerraformAutomationRole",{% endif %} {% endfor %}
+                        "arn:aws:iam::{{ accountId }}:role/PowerUserRole",
+                        "arn:aws:iam::{{ accountId }}:role/AdministratorRole" {% else %}
+                        "arn:aws:iam::{{ accountId }}:role/PowerUserRole",
+                        "arn:aws:iam::{{ accountId }}:role/AdministratorRole",{% endif %} {% endfor %}
                 ]
             },
             "Action": [
