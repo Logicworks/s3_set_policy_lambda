@@ -150,7 +150,7 @@ def set_kms_policy(kms_id,policyName,KMSPolicyDoc):
 
 
     try:
-        kms_client = boto3.resource('kms')
+        kms_client = boto3.client('kms')
 
         response = kms_client.put_key_policy(
             KeyId=kms_id,
