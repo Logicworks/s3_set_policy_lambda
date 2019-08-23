@@ -1,29 +1,42 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  SNSTopic:
+    Description: What is the SNS topic ARN that you would like to associate with this
+      lambda function.
+    Type: String
 Resources:
-  CodeBucket:
-    Properties:
-      AccessControl: Private
-      BucketName:
-        Fn::Sub: ${AWS::AccountId}-${AWS::Region}-code
-      LifecycleConfiguration:
-        Rules:
-        - NoncurrentVersionExpirationInDays: 7
-          Status: Enabled
-      VersioningConfiguration:
-        Status: Enabled
-    Type: AWS::S3::Bucket
   SetPolicyStatements:
     Properties:
-      CodeUri: s3://27883342307-us-east-1-code/5ae234d9343a0d025a7dc10d9cb4d9bd
+      CodeUri: s3://363723026716-us-east-1-code/4f5b7aaabfcbd8cf34ea705dbf88b3f3
       Events:
         MyTopic:
           Properties:
-            Topic: arn:aws:sns:us-east-1:315375983207:account_lists
+            Topic:
+              Ref: SNSTopic
           Type: SNS
       FunctionName: set_policy_statements
       Handler: set_policy_statements.lambda_handler
       Policies:
       - AWSLambdaExecute
+      - Statement:
+        - Action:
+          - kms:Create*
+          - kms:Describe*
+          - kms:Enable*
+          - kms:List*
+          - kms:Put*
+          - kms:Update*
+          - kms:Revoke*
+          - kms:Disable*
+          - kms:Get*
+          - kms:Delete*
+          - kms:TagResource
+          - kms:UntagResource
+          - kms:ScheduleKeyDeletion
+          - kms:CancelKeyDeletio
+          Effect: Allow
+          Resource: '*'
+        Version: '2012-10-17'
       - Statement:
         - Action:
           - secretsmanager:PutResourcePolicy
@@ -62,6 +75,7 @@ Resources:
           Effect: Allow
           Resource: '*'
         Version: '2012-10-17'
-      Runtime: python3.6
+      Runtime: python3.7
+      Timeout: 360
     Type: AWS::Serverless::Function
 Transform: AWS::Serverless-2016-10-31

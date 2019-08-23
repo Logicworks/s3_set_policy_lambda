@@ -7,8 +7,6 @@ import logging
 import os
 import sys
 import json
-import yaml
-import jinja2
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -59,30 +57,16 @@ def get_account_ids(sns_msg_jsn):
         logger.info("-- get_account_ids -- Finished")
 
 
-def set_secrets_policy(policy_name, s3PolicyDoc, secretArn):
-    try:
-        client = boto3.client('secretsmanager')
-
-        print("-- set_secrets_policy -- Policy Name ==> {0}".format(policy_name))
-        response = client.put_resource_policy(
-            SecretId=secretArn,
-            ResourcePolicy=s3PolicyDoc
-        )
-
-
-    except Exception as e:
-        logger.error("ERROR: ")
-        logger.error("-- set_secrets_policy -- ERROR: {0}".format(str(e)))
-        raise
-    finally:
-        logger.info("-- set_secrets_policy -- Finished")
-
-
-def policy_document_from_jinja(accountIds, current_account_id, policy_name, secretArn):
+def policy_document_from_jinja(accountIds, current_account_id, policy_name, secretArn,**kwargs):
     # Try and read the policy file file into a jinja template object
     policy_path = "./templates"
     policy_file = policy_name + ".j2"
-    bucket_name = current_account_id + "-" + policy_name
+
+    if 'bucketName' in kwargs:
+       bucket_name = kwargs.get('bucketName', None)
+    else:
+        bucket_name = current_account_id + '-' + policy_name
+
 
     try:
         root = os.path.dirname(os.path.abspath(__file__))
@@ -146,72 +130,25 @@ def set_s3_bucket_policy(bucket_name, s3PolicyDoc, ss_account_id):
         logger.info("-- set_s3_bucket_policy -- Finished")
 
 
-def set_kms_policy(kms_id,policyName,KMSPolicyDoc):
-
-
-    try:
-        kms_client = boto3.client('kms')
-
-        response = kms_client.put_key_policy(
-            KeyId=kms_id,
-            PolicyName=policyName,
-            Policy=KMSPolicyDoc
-        )
-        print("The Return from put key policy {0}".format(json.dumps(response,indent=4)))
-
-    except Exception as e:
-        logger.error("ERROR: ")
-        logger.error("-- set_kms_policy -- ERROR: {0}".format(str(e)))
-        raise
-    finally:
-        logger.info("-- set_kms_policy -- Finished")
-
-
 def lambda_handler(event, context):
     try:
-
         sts = boto3.client('sts')
         response = sts.get_caller_identity()
         current_account_id = response['Account']
-        print("Current ID {0}".format(current_account_id))
-
         message = event['Records'][0]['Sns']['Message']
         jsonMessage = json.loads(message)
-        print("Messages ==> {0}".format(jsonMessage))
-
         accountIds = get_account_ids(jsonMessage)
 
         for policyInfo in jsonMessage['policyNames']:
-            print('Policy Info {0}'.format(policyInfo))
-
             policyType = policyInfo['type']
             policyName = policyInfo['name']
-
-            if policyType == 'secrets':
-
-                client = boto3.client('secretsmanager')
-
-                response = client.describe_secret(
-                    SecretId=policyName
-                )
-                policy_name = current_account_id + "-" + policyName
-                secretArn = response['ARN']
-                s3PolicyDoc = policy_document_from_jinja(accountIds, current_account_id, policyName, secretArn)
-                set_secrets_policy(policy_name, s3PolicyDoc, secretArn)
-
-            elif  policyType == 's3':
-                bucket_name = current_account_id + "-" + policyName
-                s3PolicyDoc = policy_document_from_jinja(accountIds, current_account_id, policyName, "false")
+            if  policyType == 's3':
+                region = policyInfo['region']
+                print('Bucket Policy Region {0}'.format(region))
+                bucket_name = current_account_id + "-" + region + "-" + policyName
+                print('Bucket Name {0}'.format(bucket_name))
+                s3PolicyDoc = policy_document_from_jinja(accountIds, current_account_id, policyName, "false", bucketName=bucket_name)
                 set_s3_bucket_policy(bucket_name, s3PolicyDoc, current_account_id)
-            elif policyType == 'kms':
-
-                key_arn = policyInfo['keyarn']
-
-                KMSPolicyDoc = policy_document_from_jinja(accountIds, current_account_id, policyName, key_arn)
-                set_kms_policy(key_arn, policyName, KMSPolicyDoc)
-
-
-
     except Exception as e:
         logger.error("ERROR: ")
         logger.error("-- lambda_handler -- ERROR: {0}".format(str(e)))

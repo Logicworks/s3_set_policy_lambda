@@ -71,4 +71,11 @@ Uses
 
 
 
+```bash
+ sam build
 
+ sam package  --output-template-file packaged.yaml --s3-bucket=363723026716-us-east-1-code
+
+aws cloudformation deploy --template-file /Users/danohalloran/source/s3_set_policy_lambda/packaged.yaml  --stack-name s3setpolicylambda --parameter-overrides SNSTopic=arn:aws:sns:us-east-1:397173662143:account_lists --capabilities=CAPABILITY_IAM
+
+```

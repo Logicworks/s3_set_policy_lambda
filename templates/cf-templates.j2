@@ -34,10 +34,8 @@
             "Effect": "Allow",
             "Principal": {
                 "AWS": [{% for accountId in account_ids %} {% if loop.last %}
-                        "arn:aws:iam::{{ accountId }}:role/PowerUserRole",
-                        "arn:aws:iam::{{ accountId }}:role/AdministratorRole"{% else %}
-                        "arn:aws:iam::{{ accountId }}:role/PowerUserRole",
-                        "arn:aws:iam::{{ accountId }}:role/AdministratorRole",{% endif %} {% endfor %}
+                        "arn:aws:iam::{{ accountId }}:root" {% else %}
+                        "arn:aws:iam::{{ accountId }}:root",{% endif %} {% endfor %}
                 ]
             },
             "Action": [
@@ -55,10 +53,8 @@
             "Effect": "Allow",
             "Principal": {
                 "AWS": [{% for accountId in account_ids %} {% if loop.last %}
-                        "arn:aws:iam::{{ accountId }}:role/PowerUserRole",
-                        "arn:aws:iam::{{ accountId }}:role/AdministratorRole" {% else %}
-                        "arn:aws:iam::{{ accountId }}:role/PowerUserRole",
-                        "arn:aws:iam::{{ accountId }}:role/AdministratorRole",{% endif %} {% endfor %}
+                        "arn:aws:iam::{{ accountId }}:root" {% else %}
+                        "arn:aws:iam::{{ accountId }}:root",{% endif %} {% endfor %}
                 ]
             },
             "Action": [
